@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Orbit Drop — Daily Challenge</title>
+<meta property="og:title" content="Beat my Orbit Drop Daily score!">
+<meta property="og:description" content="Same board for everyone, every day. Tap to play today's puzzle.">
+<style>
+  html,body{margin:0;height:100%;background:#0a0e1c;color:#eef1ff;font-family:-apple-system,system-ui,sans-serif;display:flex;align-items:center;justify-content:center;text-align:center}
+  .card{max-width:340px;padding:32px 26px}
+  h1{font-size:26px;margin:0 0 6px}
+  p{opacity:.75;line-height:1.5;font-size:15px}
+  .score{font-size:44px;font-weight:800;margin:14px 0;color:#5ad7ff}
+  a.btn{display:block;margin:18px 0 0;padding:15px;border-radius:14px;background:#5ad7ff;color:#04121e;font-weight:700;text-decoration:none;font-size:16px}
+  .sm{font-size:12px;opacity:.5;margin-top:18px}
+</style></head>
+<body><div class="card">
+  <h1>🎯 Orbit Drop Daily</h1>
+  <div class="score" id="sc"></div>
+  <p id="msg">A friend challenged you to today's board — same puzzle for everyone.</p>
+  <a class="btn" id="cta" href="#">Play the Daily</a>
+  <div class="sm">Opens the app if you have it, or the App Store to get it free.</div>
+</div>
+<script>
+  var APP_STORE="https://apps.apple.com/app/orbit-drop-merge-puzzle/id6782645294";
+  var q=new URLSearchParams(location.search);
+  var day=q.get("day"), s=parseInt(q.get("s")||"0",10);
+  if(s>0){document.getElementById("sc").textContent=s;
+    document.getElementById("msg").textContent="A friend scored "+s+" on today's Daily — same board for everyone. Can you beat it?";}
+  else{document.getElementById("sc").style.display="none";}
+  // deep link into the app via custom scheme, fall back to App Store
+  var deep="orbitdrop://d/?day="+(day||"")+"&s="+(s||0);
+  var cta=document.getElementById("cta");
+  cta.href=APP_STORE;
+  cta.addEventListener("click",function(e){
+    e.preventDefault();
+    var t=Date.now();
+    // try the app
+    window.location=deep;
+    // if still here after 1.2s, go to the App Store
+    setTimeout(function(){ if(Date.now()-t<2000) window.location=APP_STORE; },1200);
+  });
+  // auto-attempt on load for iOS Safari (universal-link-style)
+  setTimeout(function(){ window.location=deep; },400);
+  setTimeout(function(){ /* Safari shows nothing if no app; user taps button */ },1700);
+</script>
+</body></html>
